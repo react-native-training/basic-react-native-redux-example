@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addPerson, deletePerson } from './actions';
+import { addPerson, deletePerson, fetchFromAPI } from './actions';
 
 import {
   StyleSheet,
   Text,
+  ScrollView,
   View,
   TextInput,
   TouchableHighlight,
@@ -13,6 +14,9 @@ import {
 class App extends React.Component {
   state = {
     inputValue: '',
+  }
+  componentDidMount() {
+    this.props.dispatchFetchFromAPI();
   }
   addPerson = () => {
     if (this.state.inputValue === '') return;
@@ -29,7 +33,7 @@ class App extends React.Component {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>People</Text>
         <TextInput
           onChangeText={text => this.updateInput(text)}
@@ -45,6 +49,11 @@ class App extends React.Component {
           <Text style={styles.buttonText}>Add Person</Text>
         </TouchableHighlight>
         {
+          this.props.isFetching && (
+            <Text>Loading...</Text>
+          )
+        }
+        {
           this.props.people.map((person, index) => (
             <View key={index} style={styles.person}>
               <Text>Name: {person.name}</Text>
@@ -52,7 +61,7 @@ class App extends React.Component {
             </View>
           ))
         }
-      </View>
+      </ScrollView>
     )
   }
 }
@@ -91,14 +100,16 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
   return {
-    people: state.people.people
+    people: state.people.people,
+    isFetching: state.people.isFetching,
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
     dispatchAddPerson: (person) => dispatch(addPerson(person)),
-    dispatchdeletePerson: (person) => dispatch(deletePerson(person))
+    dispatchdeletePerson: (person) => dispatch(deletePerson(person)),
+    dispatchFetchFromAPI: () => dispatch(fetchFromAPI()),
   }
 }
 
