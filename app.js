@@ -48,7 +48,7 @@ class App extends React.Component {
           this.props.people.map((person, index) => (
             <View key={index} style={styles.person}>
               <Text>Name: {person.name}</Text>
-              <Text onPress={() => this.deletePerson(person)}>Delete Person</Text>
+              <Text style={{color:'blue'}} onPress={() => this.deletePerson(person)}>Delete Person</Text>
             </View>
           ))
         }
